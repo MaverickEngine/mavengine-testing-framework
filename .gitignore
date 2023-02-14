@@ -12,3 +12,8 @@ logs/nginx/*
 !logs/nginx/.keep
 _trash
 *.Rproj
+themes/*
+data/*
+!data/DATA.md
+plugins/*
+!plugins/PLUGINS.md

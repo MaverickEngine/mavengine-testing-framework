@@ -34,3 +34,60 @@ services:
       - WORDPRESS_ADMIN_USER=${WORDPRESS_ADMIN_USER:-wordpress}
       - WORDPRESS_ADMIN_PASSWORD=${WORDPRESS_ADMIN_PASSWORD:-wordpress}
       - WORDPRESS_ADMIN_EMAIL=${WORDPRESS_ADMIN_EMAIL:-"test@example.com"}
+      - WORDPRESS_PLUGINS=${WORDPRESS_PLUGINS:-"dailymaverick-plugin"}
+      - WORDPRESS_ARTICLES=${WORDPRESS_ARTICLES:-200}
+      - WORDPRESS_READERS=${WORDPRESS_READERS:-100}
+      - WORDPRESS_AUTHORS=${WORDPRESS_AUTHORS:-50}
+      - WORDPRESS_THEME=${WORDPRESS_THEME:-twentytwentythree}
+  mysql-auto-data:
+    image: mysqlautodata
+    build: ./mysql_auto_data
+    container_name: ${COMPOSE_PROJECT_NAME}_mysql_autodata
+    entrypoint: sh -c "/wait && sh /scripts/load_sql.sh"
+    volumes:
+      - ./data:/data
+    working_dir: /data
+    depends_on:
+      - wordpress
+      - mysql
+    environment:
+      # Waiting for MySQL and wordpress -------------------
+      - WAIT_HOSTS=mysql:3306,wordpress:80
+      - WAIT_BEFORE_HOSTS=${WAIT_BEFORE_HOSTS:-30}
+      - WAIT_AFTER_HOSTS=${WAIT_AFTER_HOSTS:-15}
+      - WAIT_HOSTS_TIMEOUT=${WAIT_HOSTS_TIMEOUT:-300}
+      - WAIT_SLEEP_INTERVAL=${WAIT_SLEEP_INTERVAL:-30}
+      - WAIT_HOST_CONNECT_TIMEOUT=${WAIT_HOST_CONNECT_TIMEOUT:-30}
+      # Wordpress configuration -----------------------------
+      - WORDPRESS_LOCALE=${WORDPRESS_LOCALE:-en_US}
+      - WORDPRESS_DB_NAME=${COMPOSE_PROJECT_NAME:-wordpress}
+      - WORDPRESS_DB_HOST=${WORDPRESS_DB_HOST:-mysql}
+      - WORDPRESS_DB_USER=${DATABASE_USER:-root}
+      - WORDPRESS_DB_PASSWORD=${DATABASE_PASSWORD:-password}
+  wp-auto-content:
+    image: content
+    build: ./content/
+    user: xfs
+    container_name: ${COMPOSE_PROJECT_NAME}_wp_content
+    entrypoint: sh -c "/wait && sh /scripts/generate_content.sh"
+    volumes:
+      - ${WORDPRESS_DATA_DIR:-./wordpress}:/var/www/html
+    working_dir: /var/www/html
+    depends_on:
+      - wordpress
+      - mysql
+    environment:
+      # Waiting for MySQL and wordpress -------------------
+      - WAIT_HOSTS=mysql:3306,wordpress:80
+      - WAIT_BEFORE_HOSTS=${WAIT_BEFORE_HOSTS:-30}
+      - WAIT_AFTER_HOSTS=${WAIT_AFTER_HOSTS:-15}
+      - WAIT_HOSTS_TIMEOUT=${WAIT_HOSTS_TIMEOUT:-300}
+      - WAIT_SLEEP_INTERVAL=${WAIT_SLEEP_INTERVAL:-30}
+      - WAIT_HOST_CONNECT_TIMEOUT=${WAIT_HOST_CONNECT_TIMEOUT:-30}
+      # Wordpress configuration -----------------------------
+      - WORDPRESS_LOCALE=${WORDPRESS_LOCALE:-en_US}
+      - WORDPRESS_DB_NAME=${COMPOSE_PROJECT_NAME:-wordpress}
+      - WORDPRESS_DB_HOST=${WORDPRESS_DB_HOST:-mysql}
+      - WORDPRESS_DB_USER=${DATABASE_USER:-root}
+      - WORDPRESS_DB_PASSWORD=${DATABASE_PASSWORD:-password}
+

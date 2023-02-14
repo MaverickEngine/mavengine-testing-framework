@@ -1,4 +1,4 @@
-install: configure
+install: configure plugins theme
 
 configure:
 
@@ -12,3 +12,22 @@ configure:
 
 	wp option update siteurl ${WORDPRESS_WEBSITE_URL}
 	wp rewrite structure $(WORDPRESS_WEBSITE_POST_URL_STRUCTURE)
+
+plugins:
+
+	@echo "🔌 Installing standard plugins..."
+	@for plugin in "classic-editor fakerpress query-monitor"; do \
+		wp plugin install $$plugin --activate; \
+	done
+	@echo "🔌 Plugins installed"
+	@wp plugin list
+	@echo "🔌 Activating plugins..."
+	@for plugin in $(WORDPRESS_PLUGINS); do \
+		wp plugin activate $$plugin; \
+	done
+
+theme:
+
+	@echo "🔌 Installing theme..."
+	@wp theme activate $(WORDPRESS_THEME)
+	@echo "🔌 Theme installed"

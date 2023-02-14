@@ -15,9 +15,22 @@ configure:
 autoinstall: start
 	docker-compose -f docker-compose.yml -f wp-auto-config.yml run --rm wp-auto-config
 
+data: start
+	docker-compose -f docker-compose.yml -f wp-auto-config.yml run --rm mysql-auto-data
+
+content: start
+	docker-compose -f docker-compose.yml -f wp-auto-config.yml run --build --rm wp-auto-content
+
 clean: down
+	docker-compose down --volumes
 	@echo "💥 Removing related folders/files..."
 	@rm -rf  mysql/* wordpress/*
+	@echo "Copying plugins..."
+	@mkdir -p wordpress/wp-content/plugins
+	@cp -r plugins/* wordpress/wp-content/plugins
+	@echo "Copying themes..."
+	@mkdir -p wordpress/wp-content/themes
+	@cp -r themes/* wordpress/wp-content/themes
 
 reset: clean
 

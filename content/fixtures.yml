@@ -1,0 +1,148 @@
+#
+# USERS
+#
+Hellonico\Fixtures\Entity\User:
+  default_user (template):
+    user_login (unique): <username()> # '(unique)' is required
+    user_pass: 123456
+    user_email: <safeEmail()>
+    user_url: <url()>
+    user_registered: <dateTimeThisDecade()>
+    first_name: <firstName()>
+    last_name: <lastName()>
+    description: <sentence()>
+    meta:
+      phone_number: <phoneNumber()>
+      address: <streetAddress()>
+      zip: <postcode()>
+      city: <city()>
+    acf:
+      facebook_url: <url()>
+      twitter_url: <url()>
+  editors{1..10} (extends default_user):
+    role: 'editor'
+  authors{1..200} (extends default_user):
+    role: 'author'
+  subscribers{1..10} (extends default_user):
+    role: 'subscriber'
+
+#
+# ATTACHMENTS
+
+Hellonico\Fixtures\Entity\Attachment:
+  default (template): # templates can be extended to keep things DRY
+    post_title: <words(2, true)>
+    post_date: <dateTimeThisDecade()>
+    post_content: <paragraphs(5, true)>
+  # images{1..15} (extends default):
+    # file: <image(<uploadDir()>, 1200, 1200, 'cats')> # <uploadDir()> is required, image() is the default faker provider and gets images from lorempixel.
+  # pics{1..15} (extends default):
+    # file: <picsum(<uploadDir()>, 1200, 1200)> # Alternatively we provide a picsum() provider which uses picsum for images. It's quicker but doesn't support image categories.
+  # documents{1..2} (extends default):
+  #   file: <fileIn('relative/path/to/pdfs')>
+  # custom_images{1..10} (extends default):
+  #   file: <fileIn('relative/path/to/images')>
+
+# #
+# # TERMS
+# #
+# Hellonico\Fixtures\Entity\Term:
+#   category{1..10}:
+#     name (unique): <words(2, true)> # '(unique)' is required
+#     description: <sentence()>
+#     parent: '50%? <termId(childless=1)>' # 50% of created categories will have a top level parent category
+#     taxonomy: 'category' # could be skipped, default to 'category'
+#   tag{1..40}:
+#     name (unique): <words(2, true)> # '(unique)' is required
+#     description: <sentence()>
+#     taxonomy: post_tag
+#   places{1..4}: # custom taxonomy
+#     name (unique): <words(2, true)> # '(unique)' is required
+#     description: <sentences(3, true)>
+#     taxonomy: place
+#     acf:
+#       address: <streetAddress>
+#       zip: <postcode()>
+#       city: <city()>
+#       image: '@custom_images*->ID'
+
+#
+# POSTS
+#
+Hellonico\Fixtures\Entity\Post:
+
+  # TEMPLATE
+  default (template):
+    post_title: <sentence(14, true)>
+    post_date: <dateTimeThisDecade()>
+    post_content: <paragraphs(5, true)>
+    post_excerpt: <paragraphs(1, true)>
+    # meta:
+    #   _thumbnail_id: '@attachment*->ID'
+
+  # ARTICLES
+  article{1..30} (extends default):
+    post_type: 'article'
+    # meta:
+    #   _thumbnail_id: '@attachment*->ID'
+    meta_input:
+      dm_custom_section_label: <words(2, true)>
+    post_status: 'publish'
+    tax_input:
+      section: [29]
+
+#   # PAGES
+#   page{contact, privacy}:
+#     post_title: <current()>
+#     post_type: page
+
+# #
+# # COMMENTS
+# #
+# Hellonico\Fixtures\Entity\Comment:
+#   comment{1..50}:
+#     comment_post_ID: '@post*->ID'
+#     user_id: '@user*->ID'
+#     comment_date: <dateTimeThisDecade()>
+#     comment_author: <username()>
+#     comment_author_email: <safeEmail()>
+#     comment_author_url: <url()>
+#     comment_content: <paragraphs(2, true)>
+#     comment_agent: <userAgent()>
+#     comment_author_IP: <ipv4()>
+#     comment_approved: 1
+#     comment_karma: <numberBetween(1, 100)>
+#     # 'meta' and 'comment_meta' are basically the same, you can use one or both,
+#     # they will be merged, just don't provide the same keys in each definition
+#     comment_meta:
+#       some_key: <sentence()>
+#     meta:
+#       another_key: <sentence()>
+
+# #
+# #  NAV MENUS
+# #
+# Hellonico\Fixtures\Entity\NavMenu:
+#   header:
+#     name: header
+#     locations:
+#       - header
+#       - footer
+
+# #
+# #  NAV MENUS ITEMS
+# #
+# Hellonico\Fixtures\Entity\NavMenuItem:
+#   custom_menu:
+#     menu_item_url: <url()>
+#     menu_item_title: <words(4, true)>
+#     menu_id: '@header->term_id'
+#   categories{1..3}:
+#     menu_item_object: '@category*'
+#     menu_id: '@header->term_id'
+#   posts{1..3}:
+#     menu_item_object: '@post*'
+#     menu_id: '@header->term_id'
+#   page:
+#     menu_item_object: '@page*'
+#     menu_id: '@header->term_id'
