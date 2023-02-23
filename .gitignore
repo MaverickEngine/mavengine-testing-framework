@@ -17,3 +17,5 @@ data/*
 !data/DATA.md
 plugins/*
 !plugins/PLUGINS.md
+node_modules/*
+playwright-report/*

@@ -5,10 +5,11 @@ Quicky start a Wordpress environment for testing MavEngine plugins against the D
 ## Quick Start
 
 ```bash
-make clean
-make autoinstall
-make data
-make content
+make clean          # Remove all containers and volumes, prepare wp-content directory
+make autoinstall    # Install Wordpress and all the plugins and themes, create admin user
+make data           # Install any data in the /data directory
+make content        # Generate fake content for the website
+make playwright     # Run the test suite
 ```
 
 ## Requirements
@@ -70,3 +71,18 @@ This installs any data in the `/data` directory into the database. The files nee
 
 This will generate content for the website. It will generate the number of articles, readers and authors specified in the `.env` file.
 
+### make playwright
+
+This will run the test suite using Playwright. The test suite is located in the `/tests/playwright` directory.
+
+## Accessing Wordpress from the host machine
+
+You need to add `wordpress` (or whatever value you assigned to the Wordpress site) to your /etc/hosts file. The IP address is 127.0.0.1. You can then access Wordpress at http://wordpress.
+
+```
+127.0.0.1 wordpress
+```
+
+## Accessing phpMyAdmin from the host machine
+
+You can access phpMyAdmin at http://localhost:8181. The default username is `root` and the default password is `password`.

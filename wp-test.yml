@@ -1,0 +1,28 @@
+version: '3.6'
+services:
+# Cypress
+  # cypress:
+  #   image: cypress/included:9.4.1
+  #   container_name: ${COMPOSE_PROJECT_NAME}_cypress
+  #   volumes:
+  #     - ${WORDPRESS_DATA_DIR:-./wordpress}:/var/www/html
+  #     - ./tests/cypress:/e2e
+  #   working_dir: /e2e
+  #   command: cypress run --browser chrome --headless --config baseUrl=${WORDPRESS_WEBSITE_URL:-http://localhost:8080}
+
+# Playwright
+  playwright:
+    build:
+      context: ./
+      dockerfile: ./playwright/Dockerfile
+    image: playwright
+    container_name: ${COMPOSE_PROJECT_NAME}_playwright
+    volumes:
+      - ./tests/playwright:/app/tests
+      - ./playwright-report:/app/playwright-report
+    working_dir: /app
+    environment:
+      - WORDPRESS_WEBSITE_URL=${WORDPRESS_WEBSITE_URL:-http://wordpress}
+      - WORDPRESS_ADMIN_USER=${WORDPRESS_ADMIN_USER:-admin}
+      - WORDPRESS_ADMIN_PASSWORD=${WORDPRESS_ADMIN_PASSWORD:-password}
+    command: npm run test

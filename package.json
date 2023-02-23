@@ -1,0 +1,30 @@
+{
+  "name": "mavengine-testing-framework",
+  "version": "0.0.1",
+  "description": "Quicky start a Wordpress environment for testing MavEngine plugins against the Daily Maverick website",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "playwright test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MaverickEngine/mavengine-testing-framework.git"
+  },
+  "author": "Jason Norwood-Young",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MaverickEngine/mavengine-testing-framework/issues"
+  },
+  "homepage": "https://github.com/MaverickEngine/mavengine-testing-framework#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.31.0",
+    "@types/node": "^18.14.0",
+    "dotenv": "^16.0.3",
+    "playwright": "^1.31.0",
+    "toml": "^3.0.0",
+    "typescript": "^4.9.5"
+  }
+}

@@ -21,6 +21,9 @@ data: start
 content: start
 	docker-compose -f docker-compose.yml -f wp-auto-config.yml run --build --rm wp-auto-content
 
+playwright: start
+	docker-compose -f docker-compose.yml -f wp-test.yml run --build --rm playwright
+
 clean: down
 	docker-compose down --volumes
 	@echo "💥 Removing related folders/files..."
@@ -34,3 +37,5 @@ clean: down
 
 reset: clean
 
+test: start
+	docker-compose -f docker-compose.yml run --rm cypress

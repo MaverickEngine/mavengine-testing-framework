@@ -18,7 +18,9 @@ services:
       - phpmyadmin
     restart: always
     ports:
-        - ${WORDPRESS_PORT:-8080}:80
+      - ${WORDPRESS_PORT:-80}:80
+    expose:
+      - ${WORDPRESS_PORT:-80}
 
   mysql:
     image: mariadb:${MARIADB_VERSION:-latest}
@@ -66,5 +68,3 @@ services:
       - WAIT_HOSTS_TIMEOUT=${WAIT_HOSTS_TIMEOUT:-300}
       - WAIT_SLEEP_INTERVAL=${WAIT_SLEEP_INTERVAL:-30}
       - WAIT_HOST_CONNECT_TIMEOUT=${WAIT_HOST_CONNECT_TIMEOUT:-30}
-
-
