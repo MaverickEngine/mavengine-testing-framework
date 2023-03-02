@@ -9,7 +9,10 @@ configure:
 		--admin_user=${WORDPRESS_ADMIN_USER} \
 		--admin_password=${WORDPRESS_ADMIN_PASSWORD} \
 		--admin_email=${WORDPRESS_ADMIN_EMAIL}
-
+	if [ -n "${WORDPRESS_ADMIN_ROLES}" ]; then \
+		wp role create ${WORDPRESS_ADMIN_ROLES} ${WORDPRESS_ADMIN_ROLES}; \
+		wp user add-role ${WORDPRESS_ADMIN_USER} ${WORDPRESS_ADMIN_ROLES}; \
+	fi
 	wp option update siteurl ${WORDPRESS_WEBSITE_URL}
 	wp rewrite structure $(WORDPRESS_WEBSITE_POST_URL_STRUCTURE)
 
