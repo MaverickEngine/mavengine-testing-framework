@@ -68,3 +68,11 @@ services:
       - WAIT_HOSTS_TIMEOUT=${WAIT_HOSTS_TIMEOUT:-300}
       - WAIT_SLEEP_INTERVAL=${WAIT_SLEEP_INTERVAL:-30}
       - WAIT_HOST_CONNECT_TIMEOUT=${WAIT_HOST_CONNECT_TIMEOUT:-30}
+
+  build:
+    image: node:${NODE_VERSION:-latest}
+    container_name: ${COMPOSE_PROJECT_NAME}_build
+    volumes:
+      - ${BUILD_DIR:-./wordpress}:/app
+    working_dir: /app
+    command: ${BUILD_COMMAND:-sh -c 'npm install && npm run build'}
